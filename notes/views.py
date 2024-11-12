@@ -1,4 +1,3 @@
-# views.py
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -15,11 +14,7 @@ class UnitViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'], url_path='units')
     def units_by_subject(self, request, pk=None):
-        """
-        Custom action to get units for a particular subject.
-        The subject ID is passed as `pk` in the URL.
-        """
-        subject = Subject.objects.get(pk=pk)  # Get the subject by pk
-        units = subject.units.all()  # Access related units
-        serializer = UnitSerializer(units, many=True)
+        subject = Subject.objects.get(pk=pk)
+        units = subject.units.all()
+        serializer = UnitSerializer(units, many=True, context={'request': request})
         return Response(serializer.data)
